@@ -2,23 +2,29 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Dashboard } from "./Dashboard";
 import LiveboardInput from "./LiveboardInput";
-
 import { init, AuthType } from "@thoughtspot/visual-embed-sdk";
-
-init({
-  thoughtSpotHost: "https://se-thoughtspot-cloud.thoughtspot.cloud", // Ensure this is a valid URL
-  authType: AuthType.None,
-});
 
 export default function App() {
   const [liveboardID, setLiveboardID] = useState("");
+  const [thoughtSpotHost, setThoughtSpotHost] = useState("");
+
+  const initializeThoughtSpot = (host) => {
+    init({
+      thoughtSpotHost: host,
+      authType: AuthType.None,
+    });
+  };
 
   return (
     <Router>
       <div className="App">
         <Switch>
           <Route path="/" exact>
-            <LiveboardInput setLiveboardID={setLiveboardID} />
+            <LiveboardInput
+              setLiveboardID={setLiveboardID}
+              setThoughtSpotHost={setThoughtSpotHost}
+              initializeThoughtSpot={initializeThoughtSpot}
+            />
           </Route>
           <Route path="/liveboard">
             <Dashboard liveboardID={liveboardID} />
