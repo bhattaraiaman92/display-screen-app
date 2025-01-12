@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LiveboardEmbed, Action } from "@thoughtspot/visual-embed-sdk/react";
+import { useHistory } from "react-router-dom"; // Import useHistory
 import "./dashboard.css"; // Ensure correct import path
 
-export const Dashboard = () => {
+export const Dashboard = ({ liveboardID }) => {
   const liveboardRef = useRef(null);
   const [frameHeight, setFrameHeight] = useState("100vh"); // Full screen height
+  const history = useHistory(); // Initialize useHistory
 
   useEffect(() => {
     // Function to render the liveboard
@@ -25,6 +27,11 @@ export const Dashboard = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  // Function to navigate back to the landing page
+  const goToLandingPage = () => {
+    history.push("/"); // Navigate to the root path (landing page)
+  };
+
   return (
     <div className="main-container">
       <div className="liveboard-container">
@@ -32,7 +39,7 @@ export const Dashboard = () => {
           ref={liveboardRef}
           frameParams={{ height: frameHeight, width: "100%" }} // Full screen width
           fullHeight="true"
-          liveboardId="998f4484-4923-4d40-91b6-ad5d5099b553"
+          liveboardId={liveboardID}
           hideLiveboardHeader={true} // Hide the Liveboard header
           hiddenActions={[Action.VerifiedLiveboard]} // Add hiddenActions prop
           customCSS={{
