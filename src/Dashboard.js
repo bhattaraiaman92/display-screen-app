@@ -20,8 +20,8 @@ export const Dashboard = ({ liveboardID }) => {
     // Initial render of the liveboard
     refreshLiveboard();
 
-    // Set interval to refresh every 15 minutes (900,000 ms)
-    const intervalId = setInterval(refreshLiveboard, 3600000);
+    // Set interval to refresh every X minutes (time in ms)
+    const intervalId = setInterval(refreshLiveboard, 6000000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
