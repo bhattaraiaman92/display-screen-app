@@ -21,6 +21,7 @@ const LiveboardInput = ({ setLiveboardID }) => {
       <h2>Enter Liveboard ID</h2>
       <input type="text" value={input} onChange={handleInputChange} />
       <button onClick={handleSubmit}>Submit</button>
+      <p className="created-by">© Built wid ♥ by Aman Bhattarai | 2025</p>
     </div>
   );
 };
