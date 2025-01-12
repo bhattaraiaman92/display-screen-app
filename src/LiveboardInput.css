@@ -42,3 +42,9 @@
 .input-container button:hover {
   background-color: #ffc107; /* Darker shade of yellow for hover effect */
 }
+
+.created-by {
+  font-size: 12px; /* Small font size */
+  color: rgb(77, 77, 77); /* Light gray color */
+  margin-top: 100px; /* Add some space above the text */
+}
