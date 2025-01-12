@@ -1,28 +1,44 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import "./LiveboardInput.css"; // Import the CSS file
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: black; /* Changed background color to black */
+}
 
-const LiveboardInput = ({ setLiveboardID }) => {
-  const [input, setInput] = useState("");
-  const history = useHistory();
+.input-container h1 {
+  margin-bottom: 0px;
+  color: white; /* Ensures the heading is visible on a black background */
+}
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value);
-  };
+.input-container h2 {
+  margin-bottom: 20px;
+  color: white; /* Ensures the heading is visible on a black background */
+}
 
-  const handleSubmit = () => {
-    setLiveboardID(input);
-    history.push("/liveboard");
-  };
+.input-container input {
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none; /* Optional: Remove input border for a cleaner look */
+}
 
-  return (
-    <div className="input-container">
-      <h1>Welcome to EmbedHub</h1>
-      <h2>Enter your Liveboard ID</h2>
-      <input type="text" value={input} onChange={handleInputChange} />
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
-  );
-};
+.input-container input::placeholder {
+  color: #ccc; /* Ensures placeholder text is readable on a dark background */
+}
 
-export default LiveboardInput;
+.input-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(255, 86, 31); /* Changed button color to yellow */
+  color: white; /* Button font color is white */
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.input-container button:hover {
+  background-color: #ffc107; /* Darker shade of yellow for hover effect */
+}
