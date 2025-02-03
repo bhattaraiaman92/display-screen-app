@@ -1,2 +1,4 @@
-# icc-display-sample-v2
-Created with CodeSandbox
+# easyJet Display Screen Hosting
+
+Hi there,
+This is a mini JS application
