@@ -2,7 +2,7 @@
 
 Hi there,
 
-This application leverages the ThoughtSpot SDK along with JavaScript and CSS to create a simple interface for displaying a ThoughtSpot Liveboard in full-screen mode within the easyJet Group.
+This application leverages the ThoughtSpot SDK along with JavaScript and CSS to create a simple interface for displaying a ThoughtSpot Liveboard in full-screen mode within the customer.
 
 You can modify the script to adjust the refresh interval based on your requirements. It will automatically refresh the page to fetch the latest data from the Liveboard.
 
