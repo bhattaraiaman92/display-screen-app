@@ -1,60 +1,125 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LiveboardEmbed, Action } from "@thoughtspot/visual-embed-sdk/react";
-import { useHistory } from "react-router-dom"; // Import useHistory
-import "./dashboard.css"; // Ensure correct import path
+import { useHistory } from "react-router-dom";
+import Header from "./Header";
+import "./dashboard.css";
 
-export const Dashboard = ({ liveboardID }) => {
+export const Dashboard = () => {
   const liveboardRef = useRef(null);
-  const [frameHeight, setFrameHeight] = useState("100vh"); // Full screen height
-  const history = useHistory(); // Initialize useHistory
+  const [liveboardGuid, setLiveboardGuid] = useState(null);
+  const [refreshIntervalMs, setRefreshIntervalMs] = useState(null);
+  const [lastRefresh, setLastRefresh] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
+  const history = useHistory();
 
+  // Load configuration from localStorage
   useEffect(() => {
-    // Function to render the liveboard
+    const savedGuid = localStorage.getItem("liveboardGuid");
+    const savedIntervalMs = localStorage.getItem("refreshIntervalMs");
+
+    if (!savedGuid) {
+      // If no GUID is saved, redirect to homepage
+      history.push("/");
+      return;
+    }
+
+    setLiveboardGuid(savedGuid);
+    if (savedIntervalMs) {
+      setRefreshIntervalMs(parseInt(savedIntervalMs, 10));
+    }
+    setIsLoading(false);
+  }, [history]);
+
+  // Set up refresh interval
+  useEffect(() => {
+    if (!liveboardGuid || !refreshIntervalMs || refreshIntervalMs <= 0) {
+      return;
+    }
+
+    // Function to refresh the liveboard
     const refreshLiveboard = () => {
       if (liveboardRef.current) {
-        // Render the liveboard
-        liveboardRef.current.render();
+        try {
+          liveboardRef.current.render();
+          setLastRefresh(new Date());
+        } catch (error) {
+          console.error("Error refreshing liveboard:", error);
+        }
       }
     };
 
-    // Initial render of the liveboard
+    // Initial render
     refreshLiveboard();
 
-    // Set interval to refresh every X minutes (time in ms)
-    const intervalId = setInterval(refreshLiveboard, 1800000);
+    // Set up interval for auto-refresh
+    const intervalId = setInterval(refreshLiveboard, refreshIntervalMs);
 
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
+    // Cleanup interval on unmount
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [liveboardGuid, refreshIntervalMs]);
 
-  // Function to navigate back to the landing page
-  const goToLandingPage = () => {
-    history.push("/"); // Navigate to the root path (landing page)
+  const handleBackToHome = () => {
+    history.push("/");
   };
 
+  if (isLoading || !liveboardGuid) {
+    return (
+      <div className="dashboard-container">
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="main-container">
-      <div className="liveboard-container">
+    <div className="dashboard-container">
+      <div 
+        className="top-hover-zone"
+        onMouseEnter={() => setIsHeaderHovered(true)}
+        onMouseLeave={() => setIsHeaderHovered(false)}
+      />
+      <Header 
+        onBack={handleBackToHome} 
+        lastRefresh={lastRefresh}
+        isHovered={isHeaderHovered}
+        onHoverChange={setIsHeaderHovered}
+      />
+      <div className="liveboard-wrapper">
         <LiveboardEmbed
           ref={liveboardRef}
-          frameParams={{ height: frameHeight, width: "100%" }} // Full screen width
+          frameParams={{
+            height: "100vh",
+            width: "100%",
+          }}
           fullHeight="true"
-          liveboardId={liveboardID}
-          hideLiveboardHeader={true} // Hide the Liveboard header
-          hiddenActions={[Action.VerifiedLiveboard]} // Add hiddenActions prop
+          liveboardId={liveboardGuid}
+          hideLiveboardHeader={true}
+          hiddenActions={[Action.VerifiedLiveboard]}
           customCSS={{
             rules_UNSTABLE: {
               ".answer-content-module__answerVizContainer": {
                 "border-radius": "10px",
                 padding: "5px !important",
-                margin: "0px", // Reduce the gap by adjusting margin
+                margin: "0px",
               },
               ".answer-title-module__descriptionTextOneLine": {
                 display: "none",
               },
               ".ts-embed": {
-                margin: "0px", // Reduce the gap between the frame and objects
-                padding: "0px", // Reduce the gap between the frame and objects
+                margin: "0px !important",
+                padding: "0px !important",
+                width: "100% !important",
+                height: "100% !important",
+              },
+              "body": {
+                margin: "0px !important",
+                padding: "0px !important",
               },
             },
           }}
